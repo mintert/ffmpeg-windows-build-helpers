@@ -386,7 +386,7 @@ do_cmake_and_install() {
 apply_ffmpeg_patches() {
   if [ -d "$cur_dir/../ffmpeg_patches" ]; then
     for f in "$cur_dir/../ffmpeg_patches/*.patch"; do
-      apply_patch $f
+      apply_local_patch $f
     done
   fi
 }
@@ -1357,7 +1357,7 @@ build_libdecklink() {
 build_ffmpeg() {
   local type=$1
   local shared=$2
-  local git_url="https://github.com/mintert/FFmpeg.git"
+  local git_url="https://github.com/FFmpeg/FFmpeg.git"
   local output_dir="ffmpeg_git"
 
   if [[ "$non_free" = "y" ]]; then
