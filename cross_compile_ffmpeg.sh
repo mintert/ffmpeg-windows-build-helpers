@@ -383,6 +383,14 @@ do_cmake_and_install() {
   do_make_and_make_install
 }
 
+apply_ffmpeg_patches() {
+  if [ -d "$cur_dir/../ffmpeg_patches" ]; then
+    for f in "$cur_dir/../ffmpeg_patches/*.patch"; do
+      apply_patch $f
+    done
+  fi
+}
+
 apply_patch() {
  local url=$1
  local patch_type=$2
@@ -398,6 +406,28 @@ apply_patch() {
    curl -4 $url -O || exit 1
    echo "applying patch $patch_name"
    patch $patch_type < "$patch_name" || exit 1
+   touch $patch_done_name || exit 1
+   rm -f already_ran* # if it's a new patch, reset everything too, in case it's really really really new
+ else
+   echo "patch $patch_name already applied"
+ fi
+}
+
+apply_local_patch() {
+ local patch_file=$1
+ local patch_type=$2
+ if [[ -z $patch_type ]]; then
+   patch_type="-p0"
+ fi
+ local patch_name=$(basename $patch_file)
+ local patch_done_name="$patch_name.done"
+ if [[ ! -e $patch_done_name ]]; then
+   if [[ -f $patch_name ]]; then
+     rm $patch_name || exit 1 # remove old version in case it has been since updated
+   fi
+   curl -4 $url -O || exit 1
+   echo "applying patch $patch_name"
+   patch $patch_type < "$patch_file" || exit 1
    touch $patch_done_name || exit 1
    rm -f already_ran* # if it's a new patch, reset everything too, in case it's really really really new
  else
@@ -1334,7 +1364,7 @@ build_ffmpeg() {
     output_dir="${output_dir}_with_fdk_aac"
   fi
 
-  local postpend_configure_opts="--disable-decoders --disable-encoders --enable-libfdk_aac --enable-encoder=libfdk_aac --enable-decoder=libfdk_aac --enable-encoder=png --enable-encoder=apng --enable-encoder=ljpeg --enable-encoder=jpeg2000 --enable-encoder=bmp --enable-encoder=libx264 --enable-encoder=rawvideo --enable-decoder=png --enable-decoder=apng --enable-decoder=jpeg2000 --enable-decoder=bmp --enable-decoder=aac --enable-avisynth --enable-libvo_aacenc --enable-encoder=libvo_aacenc --enable-decoder=pcm_s16le --enable-decoder=pcm_f64le --enable-decoder=rawvideo --enable-encoder=mjpeg --enable-decoder=mjpeg --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab"
+  local postpend_configure_opts="--disable-decoders --disable-encoders --enable-encoder=png --enable-encoder=apng --enable-encoder=ljpeg --enable-encoder=jpeg2000 --enable-encoder=bmp --enable-encoder=libx264 --enable-encoder=rawvideo --enable-decoder=png --enable-decoder=apng --enable-decoder=jpeg2000 --enable-decoder=bmp --enable-decoder=aac --enable-avisynth --enable-libvo_aacenc --enable-encoder=libvo_aacenc --enable-decoder=pcm_s16le --enable-decoder=pcm_f64le --enable-decoder=rawvideo --enable-encoder=mjpeg --enable-decoder=mjpeg --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab"
 
   # can't mix and match --enable-static --enable-shared unfortunately, or the final executable seems to just use shared if the're both present
   if [[ $shared == "shared" ]]; then
@@ -1349,7 +1379,9 @@ build_ffmpeg() {
 
   do_git_checkout $git_url ${output_dir}
   cd $output_dir
-  
+
+  apply_ffmpeg_patches
+
   if [ "$bits_target" = "32" ]; then
    local arch=x86
   else
