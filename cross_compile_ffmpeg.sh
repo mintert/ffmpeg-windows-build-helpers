@@ -1094,10 +1094,6 @@ build_freetype() {
   cd ..
 }
 
-build_vo_aacenc() {
-  generic_download_and_install http://sourceforge.net/projects/opencore-amr/files/vo-aacenc/vo-aacenc-0.1.3.tar.gz/download vo-aacenc-0.1.3
-}
-
 build_sdl() {
   # apparently ffmpeg expects prefix-sdl-config not sdl-config that they give us, so rename...
   export CFLAGS=-DDECLSPEC=  # avoid SDL trac tickets 939 and 282, not worried about optimizing yet
@@ -1364,7 +1360,7 @@ build_ffmpeg() {
     output_dir="${output_dir}_with_fdk_aac"
   fi
 
-  local postpend_configure_opts="--disable-decoders --disable-encoders --enable-encoder=png --enable-encoder=apng --enable-encoder=ljpeg --enable-encoder=jpeg2000 --enable-encoder=bmp --enable-encoder=libx264 --enable-encoder=rawvideo --enable-decoder=png --enable-decoder=apng --enable-decoder=jpeg2000 --enable-decoder=bmp --enable-decoder=aac --enable-avisynth --enable-libvo_aacenc --enable-encoder=libvo_aacenc --enable-decoder=pcm_s16le --enable-decoder=pcm_f64le --enable-decoder=rawvideo --enable-encoder=mjpeg --enable-decoder=mjpeg --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab"
+  local postpend_configure_opts="--disable-decoders --disable-encoders --enable-encoder=png --enable-encoder=apng --enable-encoder=ljpeg --enable-encoder=jpeg2000 --enable-encoder=bmp --enable-encoder=libx264 --enable-encoder=rawvideo --enable-decoder=png --enable-decoder=apng --enable-decoder=jpeg2000 --enable-decoder=bmp --enable-decoder=aac --enable-avisynth --enable-decoder=pcm_s16le --enable-decoder=pcm_f64le --enable-decoder=rawvideo --enable-encoder=mjpeg --enable-decoder=mjpeg --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab"
 
   # can't mix and match --enable-static --enable-shared unfortunately, or the final executable seems to just use shared if the're both present
   if [[ $shared == "shared" ]]; then
@@ -1389,7 +1385,7 @@ build_ffmpeg() {
   fi
 
   init_options="--arch=$arch --target-os=mingw32 --cross-prefix=$cross_prefix --pkg-config=pkg-config --disable-w32threads"
-  #config_options="$init_options --enable-gpl --enable-libsoxr --enable-fontconfig --enable-libass --enable-libutvideo --enable-libbluray --enable-iconv --enable-libtwolame --extra-cflags=-DLIBTWOLAME_STATIC --enable-libzvbi --enable-libcaca --enable-libmodplug --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab --enable-libx265 --enable-decklink --extra-libs=-loleaut32 --enable-libx264 --enable-libxvid --enable-libmp3lame --enable-version3 --enable-zlib --enable-librtmp --enable-libvorbis --enable-libtheora --enable-libspeex --enable-libopenjpeg --enable-gnutls --enable-libgsm --enable-libfreetype --enable-libopus --enable-frei0r --enable-filter=frei0r --enable-libvo-aacenc --enable-bzlib --enable-libxavs --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-libschroedinger --enable-libvpx --enable-libilbc --enable-libwavpack --enable-libwebp --enable-libgme --enable-dxva2 --enable-libdcadec --enable-avisynth --enable-gray --enable-libopenh264" 
+  #config_options="$init_options --enable-gpl --enable-libsoxr --enable-fontconfig --enable-libass --enable-libutvideo --enable-libbluray --enable-iconv --enable-libtwolame --extra-cflags=-DLIBTWOLAME_STATIC --enable-libzvbi --enable-libcaca --enable-libmodplug --extra-libs=-lstdc++ --extra-libs=-lpng --enable-libvidstab --enable-libx265 --enable-decklink --extra-libs=-loleaut32 --enable-libx264 --enable-libxvid --enable-libmp3lame --enable-version3 --enable-zlib --enable-librtmp --enable-libvorbis --enable-libtheora --enable-libspeex --enable-libopenjpeg --enable-gnutls --enable-libgsm --enable-libfreetype --enable-libopus --enable-frei0r --enable-filter=frei0r --enable-bzlib --enable-libxavs --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-libschroedinger --enable-libvpx --enable-libilbc --enable-libwavpack --enable-libwebp --enable-libgme --enable-dxva2 --enable-libdcadec --enable-avisynth --enable-gray --enable-libopenh264" 
   config_options="$init_options --enable-gpl --enable-libx264 --enable-version3 --enable-libmp3lame --enable-zlib --enable-libopenjpeg --enable-gnutls --enable-libfreetype  --enable-bzlib --extra-cflags=-DPTW32_STATIC_LIB --enable-libilbc" # other possibilities: --enable-w32threads --enable-libflite  # other possibilities (you'd need to also uncomment the call to their build method): 
   # --enable-w32threads # [worse UDP than pthreads, so not using that] 
   # --enable-libflite # [too big so not enabled]
@@ -1505,7 +1501,6 @@ build_dependencies() {
   build_libmodplug # ffmepg and vlc can use this
   build_zvbi
   build_libvpx
-  build_vo_aacenc
   build_libdecklink
   build_libilbc
   build_fontconfig # needs expat, needs freetype (at least uses it if available), can use iconv, but I believe doesn't currently
