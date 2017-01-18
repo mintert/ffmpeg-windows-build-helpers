@@ -1113,8 +1113,8 @@ build_sdl() {
 build_sdl2() {
   # apparently ffmpeg expects prefix-sdl-config not sdl-config that they give us, so rename...
   export CFLAGS=-DDECLSPEC=  # avoid SDL trac tickets 939 and 282, and not worried about optimizing yet...
-  generic_download_and_make_and_install http://libsdl.org/release/SDL2-2.0.5.tar.gz
-  reset_cflags
+  generic_download_and_install http://libsdl.org/release/SDL2-2.0.5.tar.gz SDL2-2.0.5
+  export CFLAGS=$original_cflags # and reset it
   mkdir -p temp
   cd temp # so paths will work out right
   local prefix=$(basename $cross_prefix)
