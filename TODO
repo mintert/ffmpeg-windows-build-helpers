@@ -1,21 +1,38 @@
 == actual todos ==
 
-test out mplayer with its record-size whatever...
-fix gsm shared is broken...that was painful...
-fix vlc... :|
-poor audio sdl ffplay?
-winpthread-1.dll ?
+zipped lgpl (shared+static) and release plz
+
+fix vlc... :| then patch for DVD :)
+poor audio sdl ffplay something?
+try more march, does it really even matter?
+  compare with gcc 4.9.3 ?? grr
+  try with latest gcc :|
+
+nvidia build various deps :)
+
+nvresize distro once
+
+add cygwin "cygwin bash" prompt [and combine...]
+
+add LGPL to the normal distro, why not? (shared and static)
+
+release fei0r filters once
+
+distro mp4box/anything else vaguely useful :|
 
 == maybe/never do, more on the never... ==
+release 7z options too? :)
 
-move collect.sh "inside it" :) [already moved it to patches for now]
+release "real" static libs: http://stackoverflow.com/questions/11701635/use-ffmpeg-in-visual-studio
 
-add a "cygwin prompt here" .bat file when I do anything windowszy...yeah.
-
-default to more gcc cpu's?  hrm... (or do I do this already)
+XP mingwex?
+test out mplayer with its record-size whatever...
+fix gsm shared is broken...that was painful...
 
 opencl support [copy in headers?] https://www.khronos.org/registry/cl/ it needs something to link against too...ai ai
-  apparently "hard"
+  I doubt you can use the kronos stuff but maybe...
+  apparently "hard" http://oscarbg.blogspot.com/2009/12/opencl-with-mingw.html but possible, but https://streamcomputing.eu/blog/2015-03-16/how-to-install-opencl-on-windows/ says just to download the drivers still :|
+  or maybe just use the most basic version and is ok? https://raw.githubusercontent.com/KhronosGroup/OpenCL-Headers/opencl12/opencl.h
 
 figure out real static linkable builds [tell zeranoe to put them on his site?]
   linkable against them with mingw, msvc...
